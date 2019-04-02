@@ -1,0 +1,12 @@
+<launch>
+  <param name="use_sim_time" value="true" />
+  <node pkg="gmapping" type="slam_gmapping" name="gmapping_thing" output="screen" >
+    <param name="base_frame" value="base_footprint" />
+    <param name="odom_frame" value="/odom" />
+    <remap from="scan" to="/laser_scan"/>
+  </node>
+<node type="rviz" name="rviz" pkg="rviz" args="-d $(find mobile_robot_navigation)/config/mapping.rviz" />
+  <include file="$(find mobile_robot_description)/launch/idmap.launch"/>
+<node type="key_publisher.py" name="keys" pkg="teleop_twist"/>
+<node type="teleop_twist.py" name="teleop" pkg="teleop_twist"/>
+</launch>

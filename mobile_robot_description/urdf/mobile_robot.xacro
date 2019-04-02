@@ -1,0 +1,227 @@
+<?xml version='1.0'?>
+
+<robot name="myrobot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+
+  <xacro:include filename="$(find mobile_robot_description)/urdf/mobile_robot.gazebo" />
+  <xacro:include filename="$(find mobile_robot_description)/urdf/materials.xacro" />
+    <xacro:property name="robot_length" value="0.40"/>
+    <xacro:property name="robot_width"  value="0.20"/>
+    <xacro:property name="robot_height" value="0.10"/>
+    <xacro:property name="robot_mass" value="10"/>
+    <xacro:property name="wheel_radius" value="0.10"/>
+    <xacro:property name="wheel_length" value="0.05"/>
+    <xacro:property name="wheel_mass" value="5"/>
+
+
+  <link name='chassis'>
+
+    <inertial>
+      <mass value="${robot_mass}"/>
+      <origin xyz="0.0 0 0.0" rpy=" 0 0 0"/>
+      <inertia
+          ixx="${(1/12)*(robot_mass)*(robot_width*robot_width+robot_height*robot_height)}" ixy="0" ixz="0"
+          iyy="${(1/12)*(robot_mass)*(robot_length*robot_length+robot_height*robot_height)}" iyz="0"
+          izz="${(1/12)*(robot_mass)*(robot_width*robot_width+robot_length*robot_length)}"
+      />
+    </inertial>
+
+    <collision name='collision'>
+      <geometry>
+        <box size="${robot_length} ${robot_width} ${robot_height}"/>
+      </geometry>
+    </collision>
+
+    <visual name='chassis_visual'>
+      <geometry>
+        <box size="${robot_length} ${robot_width} ${robot_height}"/>
+      </geometry>
+    </visual>
+
+
+    <collision name='caster_collision'>
+      <origin xyz="${robot_length/3} 0 ${-robot_height/2}" rpy=" 0 0 0"/>
+      <geometry>
+        <sphere radius="${robot_height/2}"/>
+      </geometry>
+    </collision>
+
+    <visual name='caster_visual'>
+      <origin xyz="${robot_length/3} 0 ${-robot_height/2}" rpy=" 0 0 0"/>
+      <geometry>
+        <sphere radius="${robot_height/2}"/>
+      </geometry>
+    </visual>
+  </link>
+
+
+  <link name="left_wheel">
+    <!--origin xyz="0.1 0.13 0.1" rpy="0 1.5707 1.5707"/-->
+    <collision name="collision">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+      </geometry>
+    </collision>
+    <visual name="left_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <mass value="${wheel_mass}"/>
+      <cylinder_inertia m="${wheel_mass}" r="${wheel_radius}" h="${wheel_length}"/>
+      <inertia
+        ixx="${wheel_mass*(1/12)*(3*wheel_radius*wheel_radius+wheel_length*wheel_length)}" ixy="0.0" ixz="0.0"
+        iyy="${wheel_mass*(0.5)*(wheel_radius*wheel_radius)}" iyz="0.0"
+        izz="${wheel_mass*(1/12)*(3*wheel_radius*wheel_radius+wheel_length*wheel_length)}"/>
+    </inertial>
+  </link>
+
+  <link name="right_wheel">
+    <!--origin xyz="0.1 -0.13 0.1" rpy="0 1.5707 1.5707"/-->
+    <collision name="collision">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+      </geometry>
+    </collision>
+    <visual name="right_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <mass value="${wheel_mass}"/>
+      <cylinder_inertia m="${wheel_mass}" r="${wheel_radius}" h="${wheel_length}"/>
+      <inertia
+        ixx="${wheel_mass*(1/12)*(3*wheel_radius*wheel_radius+wheel_length*wheel_length)}" ixy="0.0" ixz="0.0"
+        iyy="${wheel_mass*(0.5)*(wheel_radius*wheel_radius)}" iyz="0.0"
+        izz="${wheel_mass*(1/12)*(3*wheel_radius*wheel_radius+wheel_length*wheel_length)}"/>
+    </inertial>
+  </link>
+
+
+  <joint type="continuous" name="left_wheel_hinge">
+    <origin xyz="-${robot_width/3} ${robot_width/2+wheel_length} 0" rpy="0 0 0"/>
+    <child link="left_wheel"/>
+    <parent link="chassis"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+  </joint>
+
+  <joint type="continuous" name="right_wheel_hinge">
+    <origin xyz="-${robot_width/3} -${robot_width/2+wheel_length} 0" rpy="0 0 0"/>
+    <child link="right_wheel"/>
+    <parent link="chassis"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+  </joint>
+
+
+<!--Range Sensors Links and Joints-->
+
+<link name="left_sensor1">
+  <visual>
+    <geometry>
+      <cylinder length="0.01" radius="0.01"/>
+    </geometry>
+  </visual>
+</link>
+
+<joint name="left_sensor_joint1" type="fixed">
+  <parent link="chassis"/>
+  <child link="left_sensor1"/>
+  <origin xyz="${robot_length/8} ${robot_width/3}  ${robot_height/1.9}" rpy="0 0 0.785"/>
+</joint>
+
+
+<link name="right_sensor1">
+  <visual>
+    <geometry>
+      <cylinder length="0.01" radius="0.01"/>
+    </geometry>
+  </visual>
+</link>
+<joint name="right_sensor_joint1" type="fixed">
+  <parent link="chassis"/>
+  <child link="right_sensor1"/>
+  <origin xyz="${robot_length/8} -${robot_width/3} ${robot_height/1.9}" rpy="0 0 -0.785"/>
+</joint>
+
+<link name="left_sensor2">
+  <visual>
+    <geometry>
+      <cylinder length="0.01" radius="0.01"/>
+    </geometry>
+  </visual>
+</link>
+
+<joint name="left_sensor_joint2" type="fixed">
+  <parent link="chassis"/>
+  <child link="left_sensor2"/>
+  <origin xyz="${robot_length/8} ${robot_width/3}  ${robot_height/1.9}" rpy="0 0 1.57"/>
+</joint>
+
+
+<link name="right_sensor2">
+  <visual>
+    <geometry>
+      <cylinder length="0.01" radius="0.01"/>
+    </geometry>
+  </visual>
+</link>
+<joint name="right_sensor_joint2" type="fixed">
+  <parent link="chassis"/>
+  <child link="right_sensor2"/>
+  <origin xyz="${robot_length/8} -${robot_width/3} ${robot_height/1.9}" rpy="0 0 -1.57"/>
+</joint>
+
+<link name="front_sensor">
+  <visual>
+    <geometry>
+      <cylinder length="0.01" radius="0.01"/>
+    </geometry>
+  </visual>
+</link>
+<joint name="front_sensor_joint" type="fixed">
+  <parent link="chassis"/>
+  <child link="front_sensor"/>
+  <origin xyz="${robot_length/3} 0 ${robot_height/1.9}" rpy="0 0 0"/>
+</joint>
+
+
+<joint name="sensor_laser_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz="0.15 0 ${robot_height/1.9}" rpy="0 0 0"/>
+    <parent link="chassis"/>
+    <child link="sensor_laser"/>
+  </joint>
+
+  <!-- Hokuyo Laser -->
+  <link name="sensor_laser">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+    <box size="0.01 0.01 0.01"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+
+</robot>

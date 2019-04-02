@@ -1,0 +1,19 @@
+<launch>
+
+    <arg name="world_file" default="empty_world.world"/>
+    <param name = "robot_description" command="$(find xacro)/xacro.py '$(find mobile_robot_description)/urdf/mobile_robot2.xacro'"/>
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find mobile_robot_description)/worlds/$(arg world_file)"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
+    <arg name="paused" value="true"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="recording" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
+          args="-param robot_description -urdf -model mobile_robot -z 0.1"/>
+    <node name="robot_state_publisher" pkg="robot_state_publisher"
+            type="robot_state_publisher"/>
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <!--<node name="imu2heading" pkg="mobile_robot_description" type="imu2heading.py"/>-->
+</launch>

@@ -1,0 +1,5 @@
+<launch>
+  <include file="$(find mobile_robot_description)/launch/gazebo.launch">
+  <arg name="world_file" value="idmap.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
+</include>
+</launch>

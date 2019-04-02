@@ -1,0 +1,9 @@
+<launch>
+
+  <include file="$(find mobile_robot_description)/launch/idmap.launch"/>
+
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find mobile_robot_navigation)/maps/my_newmap.yaml"/>
+  <include file="$(find mobile_robot_navigation)/launch/amcl_myrobot.launch"/>
+
+  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find mobile_robot_navigation)/config/mapping.rviz" />
+</launch>

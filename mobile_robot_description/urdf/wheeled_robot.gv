@@ -1,0 +1,23 @@
+digraph G {
+node [shape=box];
+"base_footprint" [label="base_footprint"];
+"chassis" [label="chassis"];
+"front_sensor" [label="front_sensor"];
+"holder" [label="holder"];
+"front_wheel" [label="front_wheel"];
+"left_wheel" [label="left_wheel"];
+"right_wheel" [label="right_wheel"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"base_footprint" -> "base_footprint_joint" [label="xyz: 0 0 -0.0197397 \nrpy: -1.5707 0 0"]
+"base_footprint_joint" -> "chassis"
+"chassis" -> "front_sensor_joint" [label="xyz: 0.07 -0.07 0.02 \nrpy: 1.57 -0 0"]
+"front_sensor_joint" -> "front_sensor"
+"chassis" -> "holder_joint" [label="xyz: 0.0943609 0 0.0192557 \nrpy: 0 -1.5708 -3.14159"]
+"holder_joint" -> "holder"
+"holder" -> "front_wheel_joint" [label="xyz: 0 -0.0248262 0 \nrpy: -1.0861 -2.498e-16 7.86939e-17"]
+"front_wheel_joint" -> "front_wheel"
+"chassis" -> "left_wheel_joint" [label="xyz: -0.232517 -0.00992377 0.132817 \nrpy: 0 -1.5708 1.5708"]
+"left_wheel_joint" -> "left_wheel"
+"chassis" -> "right_wheel_joint" [label="xyz: -0.232517 -0.00992377 -0.0943355 \nrpy: 0 -1.5708 1.57079"]
+"right_wheel_joint" -> "right_wheel"
+}
