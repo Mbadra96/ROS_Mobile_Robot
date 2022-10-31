@@ -1,1 +1,5 @@
-ROS_Mobile_Robot
+# ROS Mobile Robot
+
+### Description
+
+ROS Mobile Robot is a simple mobile robot example for beginners.
